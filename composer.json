@@ -1,0 +1,21 @@
+{
+    "name": "nature/base",
+    "type": "library",
+    "description": "Simply a PHP Library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Shiny",
+            "email": "daijie@php.net",
+            "homepage": "http://www.meettea.com"
+        }
+    ],
+    "require": {
+        "php": ">=5.3.2"
+    },
+    "autoload": {
+        "psr-4": {
+            "Nature\\": ""
+        }
+    }
+}
