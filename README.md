@@ -12,9 +12,7 @@
 
 1. 传统用法
    
-   1.1 将 Nature.par 放到库目录
-   
-   1.2 在主目录 index.php 中
+   将 Nature.par 放到库目录（比如 /Library），然后在你的程序头部添加以下代码。
    
    ​	<?php
    
@@ -22,13 +20,17 @@
    
    ​
    
-2. 使用 auto_prepend 简化 require 步骤
+2. 使用 auto_prepend_file 简化 require 步骤
    
-   2.1 .user.ini (fpm环境) 中配置：
+   1) .user.ini (fpm环境) 中配置：
    
    auto_prepend_file="/var/www/Library/Nature.phar"
    
    设置 auto_prepend_file 的值为 Nature.phar 的绝对路径
+   
+   2) Apache mod_php 中则使用 .htaccess  
+   
+   php_value auto_prepend_file "/var/www/Library/Nature.phar"
 
 ## 更多介绍
 
