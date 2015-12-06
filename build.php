@@ -27,6 +27,8 @@ class build extends Phar
 		$this->startBuffering();
 		$this->buildFromDirectory($dir);
 		$this->delete('build.php');
+		$this->delete('README.md');
+		$this->delete('.gitignore');
 		
 		$this->setStub("<?php
 		Phar::mapPhar('{$file}');
