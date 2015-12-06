@@ -26,11 +26,13 @@ class build extends Phar
 		
 		$this->startBuffering();
 		$this->buildFromDirectory($dir);
-		$this->delete('build.php');
-		$this->delete('README.md');
-		$this->delete('.gitignore');
-		$this->delete('.git');
-		$this->delete('.DS_Store');
+		try {
+			$this->delete('build.php');
+			$this->delete('README.md');
+			$this->delete('.gitignore');
+			$this->delete('.git');
+			$this->delete('.DS_Store');
+		} catch (Exception $e) { }
 		
 		$this->setStub("<?php
 		require 'phar://'.__FILE__.'/index.php';
