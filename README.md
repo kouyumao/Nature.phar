@@ -40,4 +40,4 @@ SHUT UP AND SHOW YOUR THE CODE.
 
 ## test area
 
-此段文字用于触发WebHook..
+此段文字用于触发WebHook.
