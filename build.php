@@ -13,29 +13,40 @@ if(ini_get('phar.readonly')==='1') {
 
 if(php_sapi_name()==='cli'){
 	$file = basename(__DIR__).'.phar';
-	new build($file);
+	new build($file, __DIR__);
 }
 
 	
 class build extends Phar
 {
-	function __construct($file)
+	function __construct($file, $source_dir)
 	{
+		if(is_file($file)) {
+			unlink($file);
+		}
 		parent::__construct($file);
-		$dir = __DIR__;
 		
+		$folder = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($source_dir));
+		$items = [];
+		foreach($folder as $item) {
+			if(strpos($item->getPathName(), '/.git/')) {
+				continue;
+			}
+		    $filename = pathinfo($item->getPathName(), PATHINFO_BASENAME);
+		    if(substr($filename, 0, 1) != '.') {
+		        $items[substr($item->getPathName(), strlen($source_dir))] = $item->getPathName();
+		    }
+		}
 		$this->startBuffering();
-		$this->buildFromDirectory($dir);
-		try {
-			$this->delete('build.php');
-			$this->delete('README.md');
-			$this->delete('.gitignore');
-			$this->delete('.git');
-			$this->delete('.DS_Store');
-		} catch (Exception $e) { }
+		
+		$this->buildFromIterator(new ArrayIterator($items));
+		$this->delete('build.php');
+		$this->delete('README.md');
 		
 		$this->setStub("<?php
-		require 'phar://'.__FILE__.'/index.php';
+		if(is_file('phar://'.__FILE__.'/index.php')) {
+			require 'phar://'.__FILE__.'/index.php';
+		}
 		__HALT_COMPILER();
 		?>");
 		$this->stopBuffering();
