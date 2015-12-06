@@ -31,8 +31,8 @@ class build extends Phar
 		$this->delete('.gitignore');
 		
 		$this->setStub("<?php
-		Phar::mapPhar('{$file}');
-		require 'phar://{$file}/index.php';
+		Phar::mapPhar(Phar::running(false));
+		require 'index.php';
 		__HALT_COMPILER();
 		?>");
 		$this->stopBuffering();
