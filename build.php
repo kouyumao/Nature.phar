@@ -12,7 +12,7 @@ if(ini_get('phar.readonly')==='1') {
 }
 
 if(php_sapi_name()==='cli'){
-	$file = basename($dir).'.phar';
+	$file = basename(__DIR__).'.phar';
 	new build($file);
 }
 
@@ -29,10 +29,11 @@ class build extends Phar
 		$this->delete('build.php');
 		$this->delete('README.md');
 		$this->delete('.gitignore');
+		$this->delete('.git');
+		$this->delete('.DS_Store');
 		
 		$this->setStub("<?php
-		Phar::mapPhar(Phar::running(false));
-		require 'index.php';
+		require 'phar://'.__FILE__.'/index.php';
 		__HALT_COMPILER();
 		?>");
 		$this->stopBuffering();
