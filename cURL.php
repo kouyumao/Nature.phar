@@ -25,6 +25,16 @@
             }
         }
         
+        function errno()
+        {
+	        return curl_errno($this->ch);
+        }
+        
+        function error()
+        {
+	        return curl_error($this->ch);
+        }
+        
         function getinfo($type)
         {
 	        $key = 'CURLINFO_'.strtoupper($type);
