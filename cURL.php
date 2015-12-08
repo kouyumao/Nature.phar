@@ -19,7 +19,14 @@
         {
             switch($type){
                 case 'json':
-                    return json_decode($value, true);
+	                $decode = json_decode($value, true);
+	                if(is_null($decode)) {
+		                throw new Exception("Can't decode value:\"{$value}\"");
+		                return $value;
+	                } else {
+                    	return $decode;
+	                }
+	                break;
                 default:
                     return $value;
             }
