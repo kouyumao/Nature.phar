@@ -49,9 +49,20 @@
 	        return curl_getinfo($this->ch, $constant);
         }
         
+        function setopt($key, $value=null)
+        {
+	        if(is_array($key) && is_null($value)) {
+		        curl_setopt_array($this->ch, $key);
+	        } else {
+		        curl_setopt($this->ch, $key, $value);
+	        }
+	        return $this;
+        }
+        
         function authorize($user, $password)
         {
             curl_setopt($this->ch, CURLOPT_USERPWD, $user.':'.$password);
+	        return $this;
         }
         
         function get($url, $dataType='txt')
