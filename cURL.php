@@ -63,8 +63,11 @@
         
         function post($url, $params=[], $dataType='txt')
         {
+	        if(is_array($params)) {
+		        $params = http_build_query($params);
+	        }
             curl_setopt($this->ch, CURLOPT_URL, $url);
-            curl_setopt($this->ch, CURLOPT_POSTFIELDS, http_build_query($params));
+            curl_setopt($this->ch, CURLOPT_POSTFIELDS, $params);
             $content = curl_exec($this->ch);
             return $this->processDataType($content, $dataType);
         }
