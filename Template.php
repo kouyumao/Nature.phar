@@ -33,7 +33,22 @@
         
         function get_template_filename($file=null)
         {
+            $app_uri =  substr(APP_DIR, strlen($_SERVER['DOCUMENT_ROOT']));
+            $base_uri = dirname($app_uri);
+            
+            
             $dir = dirname($_SERVER['SCRIPT_NAME']);
+            
+            $len = strlen($base_uri);
+            
+            if(substr($dir, 0, $len)==$base_uri) {
+	            $dir = substr($dir, $len);
+            }
+            
+            if($dir==='/'){
+                $dir = '';
+            }
+            
             if(is_null($file)){
                 $file = basename($_SERVER['SCRIPT_NAME'], '.php').'.html';
             }
