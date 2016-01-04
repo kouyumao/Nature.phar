@@ -2,7 +2,7 @@
 /**
  * nature 默认配置文件
  */
-return array(
+$cfg = [
     'environment'=>'development',
     'domain'=>isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : '',
     'x-powered-by'=>true,
@@ -19,4 +19,14 @@ return array(
         'root'=>APP_DIR.'/template'
     ),
     'Nature.cURL.timeout'=>10,
-);
+];
+
+//load configure from ENV
+foreach($_SERVER as $key=>$value) {
+	$env = getenv($key);
+	if($env!==false) {
+		$cfg[$key] = $value;
+	}
+}
+
+return $cfg;
