@@ -24,8 +24,11 @@
          * @param null $value
          * @return array|null
          */
-        function configure($key,  $value=null)
+        function configure($key=null,  $value=null)
         {
+	        if(is_null($key)) {
+		        return App::$configure;
+	        }
             $key = trim($key, "\\");
             $key = str_replace("\\", ".", $key);
 
