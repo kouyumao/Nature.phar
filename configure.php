@@ -22,11 +22,4 @@ $cfg = [
 ];
 
 //load configure from ENV
-foreach($_SERVER as $key=>$value) {
-	$env = getenv($key);
-	if($env!==false) {
-		$cfg[$key] = $value;
-	}
-}
-
-return $cfg;
+return array_replace_recursive($cfg, $_SERVER);
