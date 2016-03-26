@@ -28,6 +28,21 @@
             }
         }
         
+        function beginTransaction()
+        {
+	        return $this->dbh->beginTransaction();
+        }
+        
+        function rollBack()
+        {
+	        return $this->dbh->rollBack();
+        }
+        
+        function commit()
+        {
+	        return $this->dbh->commit();
+        }
+        
         function watchException($execute_state)
         {
             if(!$execute_state){
