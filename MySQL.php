@@ -46,7 +46,7 @@
         function watchException($execute_state)
         {
             if(!$execute_state){
-                throw new MySQLException("SQL: {$this->lastSQL}\n".$this->sth->errorInfo()[2], $this->sth->errorCode());
+                throw new MySQLException("SQL: {$this->lastSQL}\n".$this->sth->errorInfo()[2], intval($this->sth->errorCode()));
             }
         }
         
