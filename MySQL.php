@@ -145,5 +145,15 @@
             $id = $this->dbh->lastInsertId();
             return $id;
         }
+        
+        function errorInfo()
+        {
+	        return $this->sth->errorInfo();
+        }
+        
+        function errorCode()
+        {
+	        return $this->sth->errorCode();
+        }
     }
     class MySQLException extends \Exception { }
