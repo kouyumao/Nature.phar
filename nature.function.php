@@ -142,7 +142,7 @@
         
         function env($key, $default_value=false)
         {
-	        return Nature\env($key, $default_value=false);
+	        return Nature\env($key, $default_value);
         }
         
         function escape($str, $default='')
