@@ -17,6 +17,21 @@
             header('Location: '.$url);
             exit;
         }
+        
+        /**
+	     * 获取环境变量
+	     * @param string $key 键值
+	     * @param mixed $default_value 默认值
+	     */
+        function env($key, $default_value=false)
+        {
+	        $val = getenv($key);
+	        if($val===false) {
+		        return $default_value;
+	        } else {
+		        return $val;
+	        }
+        }
 
         /**
          * 读取或者设置配置项
@@ -123,6 +138,11 @@
         function redirect($url, $status=302)
         {
             return Nature\redirect($url, $status);
+        }
+        
+        function env($key, $default_value=false)
+        {
+	        return Nature\env($key, $default_value=false);
         }
         
         function escape($str, $default='')
