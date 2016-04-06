@@ -107,8 +107,10 @@
         {
             $sql = "UPDATE `{$table}` SET ";
             $fields = [];
+            $pdo_parameters = [];
             foreach ( $parameters as $field=>$value){
-                $fields[] = '`'.$field.'`=:'.$field;
+                $fields[] = '`'.$field.'`=:field_'.$field;
+                $pdo_parameters['field_'.$field] = $value;
             }
             $sql .= implode(',', $fields);
             $fields = [];
@@ -118,14 +120,15 @@
             } else if(is_array($condition)) {
                 foreach($condition as $field=>$value){
                     $parameters[$field] = $value;
-                    $fields[] = '`'.$field.'`=:'.$field;
+                    $fields[] = '`'.$field.'`=:condition_'.$field;
+                    $pdo_parameters['condition_'.$field] = $value;
                 }
                 $where = implode(' AND ', $fields);
             }
             if(!empty($where)) {
                 $sql .= ' WHERE '.$where;
             }
-            return $this->query($sql, $parameters);
+            return $this->query($sql, $pdo_parameters);
         }
         
         function insert($table, $parameters=[])
