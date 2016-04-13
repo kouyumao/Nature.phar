@@ -161,7 +161,7 @@
 	        return $this->sth->errorInfo();
         }
         
-        protected format_table_name($table)
+        protected function format_table_name($table)
         {
             $parts = explode(".", $table, 2);
             
