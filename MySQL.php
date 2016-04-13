@@ -110,6 +110,7 @@
         
         function update($table, $parameters=[], $condition=[])
         {
+            $table = $this->format_table_name($table);
             $sql = "UPDATE `{$table}` SET ";
             $fields = [];
             $pdo_parameters = [];
@@ -138,7 +139,8 @@
         
         function insert($table, $parameters=[])
         {
-            $sql = "INSERT INTO `$table`";
+            $table = $this->format_table_name($table);
+            $sql = "INSERT INTO $table";
             $fields = [];
             $placeholder = [];
             foreach ( $parameters as $field=>$value){
@@ -157,6 +159,18 @@
         function errorInfo()
         {
 	        return $this->sth->errorInfo();
+        }
+        
+        protected format_table_name($table)
+        {
+            $parts = explode(".", $table, 2);
+            
+            if(count($parts) > 1) {
+                $table = $parts[0].".`{$parts[1]}`";
+            } else {
+                $table = "`$table`";
+            }
+            return $table;
         }
         
         function errorCode()
