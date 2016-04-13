@@ -111,7 +111,7 @@
         function update($table, $parameters=[], $condition=[])
         {
             $table = $this->format_table_name($table);
-            $sql = "UPDATE `{$table}` SET ";
+            $sql = "UPDATE $table SET ";
             $fields = [];
             $pdo_parameters = [];
             foreach ( $parameters as $field=>$value){
