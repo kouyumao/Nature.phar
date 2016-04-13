@@ -33,6 +33,11 @@
 	        return $this->dbh->beginTransaction();
         }
         
+        function inTransaction()
+        {
+            return $this->dbh->inTransaction();
+        }
+        
         function rollBack()
         {
 	        return $this->dbh->rollBack();
