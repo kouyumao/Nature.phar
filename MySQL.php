@@ -153,7 +153,11 @@
             $this->sth = $this->dbh->prepare($sql);
             $this->watchException($this->sth->execute($parameters));
             $id = $this->dbh->lastInsertId();
-            return $id;
+            if(empty($id)) {
+                return $this->sth->rowCount();
+            } else {
+                return $id;
+            }
         }
         
         function errorInfo()
