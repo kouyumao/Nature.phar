@@ -21,7 +21,7 @@
                 case 'json':
 	                $decode = json_decode($value, true);
 	                if(is_null($decode)) {
-		                throw new Exception("Can't decode value:\"{$value}\"");
+		                throw new \Exception("Can't decode value:\"{$value}\"");
 		                return $value;
 	                } else {
                     	return $decode;
