@@ -168,8 +168,10 @@
                 } else {
                     $returnData = $func->invokeArgs($args);
                 }
+                $content_type = false;
                 switch (gettype($returnData)) {
                     case 'array':
+                        $content_type = 'application/json';
                         echo json_encode($returnData, JSON_UNESCAPED_UNICODE);
                         break;
                     case 'string':
@@ -178,6 +180,18 @@
                     case 'double':
                         echo $returnData;
                         break;
+                    case 'object':
+                        $methods = ['saveXML', 'asXML'];
+                        foreach($methods as $method) {
+                        	if(method_exists($returnData, $method)) {
+                                $content_type = 'text/xml';
+                        		echo $returnData->$method();
+                        	}
+                        }
+                        break;
+                }
+                if(!headers_sent() && $content_type) {
+                    header('Content-Type: '.$content_type);
                 }
                 return true;
             } catch (\ReflectionException $e) {
