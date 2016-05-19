@@ -171,7 +171,7 @@
                 $content_type = false;
                 switch (gettype($returnData)) {
                     case 'array':
-                        $content_type = 'application/json';
+                        $this->content_type('application/json');
                         echo json_encode($returnData, JSON_UNESCAPED_UNICODE);
                         break;
                     case 'string':
@@ -181,17 +181,11 @@
                         echo $returnData;
                         break;
                     case 'object':
-                        $methods = ['saveXML', 'asXML'];
-                        foreach($methods as $method) {
-                        	if(method_exists($returnData, $method)) {
-                                $content_type = 'text/xml';
-                        		echo $returnData->$method();
-                        	}
+                        if(method_exists($returnData, 'saveXML')) {
+                            $this->content_type('text/xml');
+                            echo $returnData->saveXML();
                         }
                         break;
-                }
-                if(!headers_sent() && $content_type) {
-                    header('Content-Type: '.$content_type);
                 }
                 return true;
             } catch (\ReflectionException $e) {
@@ -252,13 +246,20 @@
             });
         }
         
+        function content_type($content_type)
+        {
+            if(!headers_sent() && $content_type) {
+                header('Content-Type: '.$content_type);
+            }
+        }
+        
         /**
          * power by information
          */
         function power()
         {
-	        if (configure('x-powered-by')) {
-		       header('X-Powered-By: Nature/'.VERSION.' ('.VERSION_NAME.')'); 
-	        }
+            if (configure('x-powered-by')) {
+               header('X-Powered-By: Nature/'.VERSION.' ('.VERSION_NAME.')'); 
+            }
         }
     }
