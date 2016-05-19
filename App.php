@@ -34,8 +34,10 @@
         
         function __destruct()
         {
-            $this->call_controller();
-            $this->call_function();
+            if(PHP_SAPI!=='cli') {                
+                $this->call_controller();
+                $this->call_function();
+            }
         }
         
         /**
