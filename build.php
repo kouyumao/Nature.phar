@@ -32,6 +32,9 @@ class build extends Phar
 			if(strpos($item->getPathName(), '/.git/')) {
 				continue;
 			}
+			if(strpos($item->getPathName(), '/test/')) {
+				continue;
+			}
 		    $filename = pathinfo($item->getPathName(), PATHINFO_BASENAME);
 		    if(substr($filename, 0, 1) != '.') {
 		        $items[substr($item->getPathName(), strlen($source_dir))] = $item->getPathName();

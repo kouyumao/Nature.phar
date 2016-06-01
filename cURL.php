@@ -21,7 +21,10 @@
                 case 'json':
 	                $decode = json_decode($value, true);
 	                if(is_null($decode)) {
-		                throw new \Exception("Can't decode value:\"{$value}\"");
+    	                $errno = $this->errno();
+    	                $msg = $this->error();
+    	                $error = "cURL error: ($errno) $msg";
+		                throw new \Exception("Can't decode value:\"{$value}\" $error");
 		                return $value;
 	                } else {
                     	return $decode;
