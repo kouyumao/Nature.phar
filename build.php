@@ -32,6 +32,9 @@ class build extends Phar
 			if(strpos($item->getPathName(), '/.git/')) {
 				continue;
 			}
+			if(strpos($item->getPathName(), '.psd')) {
+				continue;
+			}
 			if(strpos($item->getPathName(), '/test/')) {
 				continue;
 			}

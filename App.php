@@ -1,8 +1,8 @@
 <?php
     namespace Nature;
     
-    define('VERSION', '0.1.0');
-    define('VERSION_NAME', 'LinYin');
+    define('VERSION', '0.2.0');
+    define('VERSION_NAME', 'Hupao');
     define('ROOT', __DIR__);
     
     /**
@@ -186,6 +186,8 @@
                         if(method_exists($returnData, 'saveXML')) {
                             $this->content_type('text/xml');
                             echo $returnData->saveXML();
+                        } else if(method_exists($returnData, '__toString')) {
+                            echo strval($returnData);
                         }
                         break;
                 }
