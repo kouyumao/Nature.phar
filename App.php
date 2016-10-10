@@ -13,6 +13,7 @@
     class App 
     {
         static $configure = array();
+        public $errors = [];
         
         function __construct($app_dir=null) 
         {
@@ -27,16 +28,20 @@
             set_include_path(get_include_path().':'.ROOT);
             $this->load_config();
             set_exception_handler(array($this, 'exception_handler'));
-            //set_error_handler([$this, 'error_handler']);
+            set_error_handler(array($this, 'error_handler'));
             define('DEBUG', configure('debug'));
             $this->power();
         }
         
         function __destruct()
         {
-            if(PHP_SAPI!=='cli') {                
-                $this->call_controller();
-                $this->call_function();
+            try {
+                if(PHP_SAPI!=='cli') {                
+                    $this->call_controller();
+                    $this->call_function();
+                }
+            } catch (\Exception $e) {
+                $this->exception_handler($e);
             }
         }
         
@@ -55,8 +60,15 @@
                     'errfile'=>$exception->getFile(),
                     'errline'=>$exception->getLine()
                 ));
+                $tpl->assign('errors', $this->errors);
                 $tpl->display('500.html');
             }
+        }
+        
+        function error_handler($errno, $errstr, $errfile, $errline)
+        {
+            $this->errors[] = [$errno, $errstr, $errfile, $errline];
+            return true;
         }
         
         /**
