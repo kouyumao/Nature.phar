@@ -11,9 +11,13 @@
 		        list-style: none;
 		        color: #999;
 	        }
+	        hr{
+    	        border: 0;
+    	        border-bottom:1px solid #cecdc5;
+	        }
 	        h1{
+                font-size: 21px;
 		        color: #333;
-		        margin: 25px 0;
 		        text-align: center;
 		        font-family: serif;
 		        font-weight: 100;
@@ -25,19 +29,23 @@
 		        float:right;
 		        font-size: 9px;
 		        color: #999;
-		        margin: 15px 10px 0 0;
+		        margin: 0 10px;
 	        }
 	        #logo{
 		        vertical-align: middle;
 		        margin-left: 10px;
 	        }
 	        .container{
-		        width: 80%;
-		        min-width: 850px;
+		        width: 90%;
+		        max-width: 650px;
 		        padding:40px 20px;
 		        margin:0 auto;
 		        min-height:500px;
-		        background: rgba(255, 255, 255, 0.78)
+		        background: rgba(255, 255, 255, 0.78);
+                position: absolute;  
+                top: 50%;
+                left: 50%;  
+                transform: translate(-50%,-50%);
 	        }
 	        a{
 		        
@@ -57,7 +65,7 @@
 	        }
 	        .main{
 		        padding: 10px;
-		        width: 850px;
+		        width: 650px;
 		        margin:0 auto;
 	        }
 	        .error-info{
@@ -66,8 +74,9 @@
 	        .error-msg{
 		        margin: 0;
 		        color: #333;
-		        font-size: 21px;
-		        font-family: serif;
+		        font-size: 18px;
+		        font-family: monaco, serif;
+		        line-height: 1.6;
 	        }
 	        .trace{
 		        color: #666;
@@ -117,9 +126,8 @@
     </head>
     <body>
         <?php if(ini_get('display_errors')): ?>
-        	<div class="container" style="">
+        	<div class="container">
 				<span class="version">Nature <?=VERSION?> (<?=VERSION_NAME?>)</span>
-				<img id="logo" width="187" src="data:image/png;base64,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"/>
 				<hr size="color:#111;">
 				<div class="main">
 					<h1>HTTP 500 Server Error</h1>
