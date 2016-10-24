@@ -32,7 +32,13 @@ class build extends Phar
 			if(strpos($item->getPathName(), '/.git/')) {
 				continue;
 			}
+			if(strpos($item->getPathName(), '/.idea/')) {
+				continue;
+			}
 			if(strpos($item->getPathName(), '.psd')) {
+				continue;
+			}
+			if(strpos($item->getPathName(), '.DS_Store')) {
 				continue;
 			}
 			if(strpos($item->getPathName(), '/test/')) {
@@ -46,8 +52,10 @@ class build extends Phar
 		$this->startBuffering();
 		
 		$this->buildFromIterator(new ArrayIterator($items));
-		$this->delete('build.php');
-		$this->delete('README.md');
+		$this->delete(basename(__FILE__));
+		if(is_file('README.md')) {		
+    		$this->delete('README.md');
+		}
 		
 		$this->setStub("<?php
 		if(is_file('phar://'.__FILE__.'/index.php')) {
