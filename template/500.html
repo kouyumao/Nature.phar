@@ -1,8 +1,9 @@
 <!DOCTYPE HTML>
 <html>
     <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
         <meta charset="utf-8" />
-        <title>HTTP 500 Server Errors</title>
+        <title>服务器正在抢修中</title>
         <?php if(ini_get('display_errors')): ?>
         <style>
 	        ul, li{
@@ -36,7 +37,6 @@
 		        margin-left: 10px;
 	        }
 	        .container{
-		        width: 90%;
 		        max-width: 650px;
 		        padding:40px 20px;
 		        margin:0 auto;
@@ -65,8 +65,9 @@
 	        }
 	        .main{
 		        padding: 10px;
-		        width: 650px;
+                max-width: 550px;
 		        margin:0 auto;
+		        
 	        }
 	        .error-info{
 		        color: #666;
@@ -109,6 +110,10 @@
 				background: url(//s.doubanio.com/f/sns/255fcb358bc814a4ee4eae37905c2a565da58ee9/pics/quoter.gif) no-repeat right bottom;
 				word-wrap: break-word;
 			}
+			#trace{
+                white-space: pre-wrap;
+				word-wrap: break-word;
+			}
 			</style>
 			<script>
 				function showTrace(){
@@ -130,7 +135,7 @@
 				<span class="version">Nature <?=VERSION?> (<?=VERSION_NAME?>)</span>
 				<hr size="color:#111;">
 				<div class="main">
-					<h1>HTTP 500 Server Error</h1>
+					<h1>服务器正在抢修中</h1>
 					<ul>
 						<li><b>Code</b><span class="num">#<?=$errno?></span></li>
 						<li><b>File</b><span class="file"><?=$errfile?></span> </li>
