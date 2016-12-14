@@ -1,8 +1,8 @@
 <?php
     namespace Nature;
     
-    define('VERSION', '0.2.0');
-    define('VERSION_NAME', 'Hupao');
+    define('VERSION', '1.0.0');
+    define('VERSION_NAME', 'Longjing');
     define('ROOT', __DIR__);
     
     /**
@@ -31,18 +31,6 @@
             set_error_handler(array($this, 'error_handler'));
             define('DEBUG', configure('debug'));
             $this->power();
-        }
-        
-        function __destruct()
-        {
-            try {
-                if(PHP_SAPI!=='cli') {                
-                    $this->call_controller();
-                    $this->call_function();
-                }
-            } catch (\Exception $e) {
-                $this->exception_handler($e);
-            }
         }
         
         /**
@@ -225,6 +213,21 @@
                     $obj = $reflection->newInstance();
                     $this->rest($obj);
                 }
+            }
+        }
+        
+        function run()
+        {
+            $this->call_controller();
+            $this->call_function();
+            $this->hook('PageUnload');
+        }
+        
+        function hook($event)
+        {
+            $className = '\\NatureHook\\'.$event;
+            if(class_exists($className)) {
+                $hooker = new $className();
             }
         }
         

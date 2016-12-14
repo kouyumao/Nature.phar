@@ -15,6 +15,7 @@ class index extends Nature\Controller
   	return ["msg"=>"Hello World"];
   }
 }
+$nature->run();
 ```
 
 displays:

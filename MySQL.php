@@ -30,12 +30,33 @@
         
         function beginTransaction()
         {
-	        return $this->dbh->beginTransaction();
+            if(!$this->dbh->beginTransaction()) {
+                throw new MySQLException("Can not begin a database transaction.");
+            }
+            return $this;
         }
         
         function inTransaction()
         {
             return $this->dbh->inTransaction();
+        }
+        
+        function prepare($sql)
+        {
+            $this->lastSQL = $sql;
+            $this->sth = $this->dbh->prepare($sql);
+            return $this;
+        }
+        
+        function execute($sql, $parameters=[])
+        {
+            if(is_array($sql)) {
+                $parameters = $sql;
+            } else {
+                $this->prepare($sql);
+            }
+            $this->watchException($this->sth->execute($parameters));
+            return $this;
         }
         
         function rollBack()
@@ -57,10 +78,8 @@
         
         function fetchAll($sql, $parameters=[])
         {
+            $this->execute($sql, $parameters);
             $result = [];
-            $this->lastSQL = $sql;
-            $this->sth = $this->dbh->prepare($sql);
-            $this->watchException($this->sth->execute($parameters));
             while($result[] = $this->sth->fetch(\PDO::FETCH_ASSOC)){ }
             array_pop($result);
             return $result;
@@ -68,10 +87,8 @@
         
         function fetchColumnAll($sql, $parameters=[], $position=0)
         {
+            $this->execute($sql, $parameters);
             $result = [];
-            $this->lastSQL = $sql;
-            $this->sth = $this->dbh->prepare($sql);
-            $this->watchException($this->sth->execute($parameters));
             while($result[] = $this->sth->fetch(\PDO::FETCH_COLUMN, $position)){ }
             array_pop($result);
             return $result;
@@ -79,36 +96,78 @@
         
         function exists($sql, $parameters=[])
         {
-            $this->lastSQL = $sql;
-            $data = $this->fetch($sql, $parameters);
-            return !empty($data);
+            $result = $this->fetch($sql, $parameters);
+            return !empty($result);
         }
         
         function query($sql, $parameters=[])
         {
-            $this->lastSQL = $sql;
-            $this->sth = $this->dbh->prepare($sql);
-            $this->watchException($this->sth->execute($parameters));
+            $this->execute($sql, $parameters);
             return $this->sth->rowCount();
         }
         
         function fetch($sql, $parameters=[], $type=\PDO::FETCH_ASSOC)
         {
-            $this->lastSQL = $sql;
-            $this->sth = $this->dbh->prepare($sql);
-             $this->watchException($this->sth->execute($parameters));
+            $this->execute($sql, $parameters);
             return $this->sth->fetch($type);
+        }
+        
+        function fetchKV($sql, $parameters=[])
+        {
+            $results = $this->fetch($sql, $parameters);
+            if(count($results)==2) {
+                $key = current($results);
+                $value = next($results);
+            } else {
+                $key = current($results);
+                $value = $results;
+            }
+            return [
+                $key=>$value
+            ];
+        }
+        
+        /**
+         * Return an array with key and values
+         * the key is the first field
+         * For example: SELECT 'key', 'value'
+         * will return [
+         *    'key'=>'value'
+         * ]
+         * If the fields has more than two,
+         *  SELECT 'key', 'value1', 'value2'
+         * it will return
+         * [
+         *    'key'=>[
+         *          0=>'value1',
+         *          1=>'value2'
+         *      ]
+         * ]
+         */
+        function fetchKVAll($sql, $parameters=[])
+        {
+            $results = $this->fetchAll($sql, $parameters);
+            $result = current($results);
+            $is_multi = (count($result) > 2);
+            $arr = [];
+            foreach($results as $item) {
+                $key = current($item);
+                if($is_multi) {
+                    $arr[$key] = $item;
+                } else {
+                    $arr[$key] = next($item);
+                }
+            }
+            return $arr;
         }
         
         function fetchColumn($sql, $parameters=[], $position=0)
         {
-            $this->lastSQL = $sql;
-            $this->sth = $this->dbh->prepare($sql);
-            $this->watchException($this->sth->execute($parameters));
+            $this->execute($sql, $parameters);
             return $this->sth->fetch(\PDO::FETCH_COLUMN, $position);
         }
         
-        function update($table, $parameters=[], $condition=[])
+        function update($table, $parameters=[], $condition=[], $force=false)
         {
             $table = $this->format_table_name($table);
             $sql = "UPDATE $table SET ";
@@ -131,6 +190,9 @@
                 }
                 $where = implode(' AND ', $fields);
             }
+            if(empty($where) && !$force) {
+                throw new MySQLException("SQL: {$this->lastSQL}\n MySQL Update Exception: Condition is empty and force=false");
+            }
             if(!empty($where)) {
                 $sql .= ' WHERE '.$where;
             }
@@ -149,9 +211,7 @@
             }
             $sql .= '('.implode(",", $fields).') VALUES ('.implode(",", $placeholder).')';
             
-            $this->lastSQL = $sql;
-            $this->sth = $this->dbh->prepare($sql);
-            $this->watchException($this->sth->execute($parameters));
+            $this->execute($sql, $parameters);
             $id = $this->dbh->lastInsertId();
             if(empty($id)) {
                 return $this->sth->rowCount();
@@ -182,4 +242,3 @@
 	        return $this->sth->errorCode();
         }
     }
-    class MySQLException extends \Exception { }
