@@ -14,11 +14,12 @@
     {
         static $configure = array();
         public $errors = [];
+        protected $auto_run;
         
         function __construct($app_dir=null) 
         {
             if (is_null($app_dir)) {
-                if(\Phar::running(false)) {
+                if(class_exists('Phar') && \Phar::running(false)) {
                     $app_dir = dirname(\Phar::running(false));
                 } else {
                     $app_dir = realpath(ROOT.'/../');
@@ -29,8 +30,16 @@
             $this->load_config();
             set_exception_handler(array($this, 'exception_handler'));
             set_error_handler(array($this, 'error_handler'));
+            $this->set_psr4_autoload('Nature', __DIR__);
             define('DEBUG', configure('debug'));
             $this->power();
+        }
+        
+        function __destruct()
+        {
+            if($this->auto_run) {
+                $this->run();
+            }
         }
         
         /**
@@ -280,5 +289,10 @@
             if (configure('x-powered-by')) {
                header('X-Powered-By: Nature/'.VERSION.' ('.VERSION_NAME.')'); 
             }
+        }
+        
+        function set_auto_run($mode=false)
+        {
+            $this->auto_run = $mode;
         }
     }
