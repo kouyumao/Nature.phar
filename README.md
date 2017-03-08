@@ -71,7 +71,8 @@ require('App/Nature.phar');
 文件内放置一个 class ，并且 extends 自 `Nature\Controller`，框架即可自动初始化，并以 rest 风格调用。 `约定: 为避免混乱，一个文件内放一个 Controller `
 
 ```php
-class indexController extends Nature\Controller {
+class indexController extends Nature\Controller 
+{
     function get(){
         return 'Can you see me ?';
     }
@@ -83,10 +84,13 @@ class indexController extends Nature\Controller {
 除了支持初始化 Controller 对象，我们还支持使用 function 初始化。(仅在简单场合使用)
 
 ```php
-function get() {
+function get() 
+{
     return 'Can you see me ?';
 }
-function post() {
+
+function post() 
+{
 }
 ```
 
@@ -145,7 +149,8 @@ PHP 就是模板语音。框架默认选择 php 原生语法做模板。Controll
 如果没有指定 display 的模板文件，默认使用当前文件名，并把 .php 替换成 .html
 
 ```php
-class indexController extends Nature\Controller {
+class indexController extends Nature\Controller 
+{
 	function get(){
 		$this->display();
 		//等值于 $this->display('index.html');
@@ -183,7 +188,8 @@ class indexController extends Nature\Controller { }
 示例：`index.php`
 
 ```php
-class indexController extends Nature\Controller {
+class indexController extends Nature\Controller 
+{
 	public $db;
 	function get(){
 		$data = $this->db->fetch("SELECT 1,2,3");
@@ -231,7 +237,8 @@ return [
 
 ```php
 namespace Myspace;
-class myclass{
+class myclass
+{
 	function __setup($configure){
 		//这里的 $configure 等于上面 Myspace.myclass 的内容。
 	}
